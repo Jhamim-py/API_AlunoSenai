@@ -1,0 +1,17 @@
+{
+  "name": "mesa",
+  "version": "1.0.0",
+  "description": "mesa api desenvolvida em node.js e mongodb",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start:": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Five Devs",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.3.2"
+  }
+}
