@@ -3,6 +3,21 @@ const { default: mongoose } = require("mongoose");
 const app = express()
 app.use(express.json())
 const port = process.env.PORT || 3000;
+// Middleware para permitir solicitações de qualquer origem
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, OPTIONS"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  next();
+});
+
+app.use(express.json());
 mongoose.connect('mongodb+srv://houtarousenki:pYuWQ6LRAXpSgmQL@mesa.wybqozy.mongodb.net/?retryWrites=true&w=majority&appName=mesa')
 
 const Mesa = mongoose.model('Mesa',{
