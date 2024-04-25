@@ -1,24 +1,46 @@
 const express =  require("express");
 const { default: mongoose } = require("mongoose");
-const app = express()
-app.use(express.json())
+const multer = require('multer')
+const path = require('path');
+const app = express();
+app.use(express.json()) ;
 const port = process.env.PORT || 3000;
-// Middleware para permitir solicitações de qualquer origem
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  next();
+
+//Multer
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads")
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + '-' + Date.now())
+    }
 });
 
-app.use(express.json());
+const upload = multer({ storage: storage });
+
+
+//Resolver problemas com permições
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, OPTIONS"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    );
+    next();
+  });
+  
+
+
+//conectar no banco
+
 mongoose.connect('mongodb+srv://houtarousenki:pYuWQ6LRAXpSgmQL@mesa.wybqozy.mongodb.net/?retryWrites=true&w=majority&appName=mesa')
+
+
+
 
 const Mesa = mongoose.model('Mesa',{
     nome: String,
@@ -35,11 +57,11 @@ app.get("/",async(req, res) => {
 
 
 
-app.post("/", async (req,res) =>{
+app.post("/", upload.single("foto"), async (req,res) =>{
     const mesa = new Mesa({
         nome: req.body.nome,
         descricao: req.body.descricao,
-        foto: req.body.foto,
+        foto: req.file.filename,
     })
    await mesa.save()
    res.send(mesa)
