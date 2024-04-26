@@ -1,23 +1,9 @@
 const express =  require("express");
 const { default: mongoose } = require("mongoose");
-const multer = require('multer')
-const path = require('path');
-const app = express();
-app.use(express.json()) ;
-const port = process.env.PORT || 3000;
-
-//Multer
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "uploads")
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
-});
-
-const upload = multer({ storage: storage });
-
+const app = express()
+app.use(express.json())
+const port = 3000;
+mongoose.connect('mongodb+srv://houtarousenki:pYuWQ6LRAXpSgmQL@mesa.wybqozy.mongodb.net/?retryWrites=true&w=majority&appName=mesa')
 
 //Resolver problemas com permições
 app.use((req, res, next) => {
@@ -35,12 +21,6 @@ app.use((req, res, next) => {
   
 
 
-//conectar no banco
-
-mongoose.connect('mongodb+srv://houtarousenki:pYuWQ6LRAXpSgmQL@mesa.wybqozy.mongodb.net/?retryWrites=true&w=majority&appName=mesa')
-
-
-
 
 const Mesa = mongoose.model('Mesa',{
     nome: String,
@@ -48,6 +28,11 @@ const Mesa = mongoose.model('Mesa',{
     foto: String,
 })
 
+
+app.get("/:id",async(req, res) => {
+    const mesa = await Mesa.findById(req.params.id)
+    res.send(mesa)
+})
 
 
 app.get("/",async(req, res) => {
@@ -57,11 +42,11 @@ app.get("/",async(req, res) => {
 
 
 
-app.post("/", upload.single("foto"), async (req,res) =>{
+app.post("/", async (req,res) =>{
     const mesa = new Mesa({
         nome: req.body.nome,
         descricao: req.body.descricao,
-        foto: req.file.filename,
+        foto: req.body.foto,
     })
    await mesa.save()
    res.send(mesa)
