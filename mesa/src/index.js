@@ -26,6 +26,7 @@ const Mesa = mongoose.model('Mesa',{
     nome: String,
     descricao: String,
     foto: String,
+    contato: String,
 })
 
 
@@ -47,6 +48,7 @@ app.post("/", async (req,res) =>{
         nome: req.body.nome,
         descricao: req.body.descricao,
         foto: req.body.foto,
+        contato: req.body.contato,
     })
    await mesa.save()
    res.send(mesa)
@@ -70,6 +72,7 @@ app.put('/:id', async (req, res)=> {
        nome :       req.body.nome,
        descricao : req.body.descricao,
        foto:    req.body.foto,
+       contato: req.body.contato
 })
 return res.send(mesa)
 });
