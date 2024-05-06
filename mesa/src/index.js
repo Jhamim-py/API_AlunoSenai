@@ -72,7 +72,7 @@ app.put('/:id', async (req, res)=> {
        nome :       req.body.nome,
        descricao : req.body.descricao,
        foto:    req.body.foto,
-       contato: req.body.contato
+       contato: req.body.contato,
 })
 return res.send(mesa)
 });
