@@ -69,10 +69,12 @@ app.delete( '/:id', async ( req ,res)=>{
 
 app.put('/:id', async (req, res)=> {
    const mesa = await Mesa.findByIdAndUpdate(req.params.id,{ 
-       nome :       req.body.nome,
-       descricao : req.body.descricao,
-       foto:    req.body.foto,
+       nome : req.body.nome,
+       descricao :req.body.descricao,
+       foto: req.body.foto,
        contato: req.body.contato,
-})
+},
+{new:true}
+)
 return res.send(mesa)
 });
